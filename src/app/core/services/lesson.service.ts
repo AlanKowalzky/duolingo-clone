@@ -1,7 +1,8 @@
 import { Injectable, computed, signal, effect } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { HttpClient } from '@angular/common/http';
-import { Lesson, UserProgress } from '../../shared/models/lesson.model';
+import { Lesson } from '../../shared/models/lesson.model';
+import { UserProgress } from '../../shared/models/user.model';
 import { User } from '../../shared/models/user.model';
 
 @Injectable({

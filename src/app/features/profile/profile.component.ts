@@ -8,21 +8,21 @@ import { LessonService } from '../../core/services/lesson.service';
   imports: [CommonModule],
   template: `
     <div class="profile-container">
-      <h1>Twój profil</h1>
+      <h1>Your Profile</h1>
       
       <div class="stats-grid">
         <div class="stat-card">
-          <h3>Ukończone lekcje</h3>
+          <h3>Completed Lessons</h3>
           <span class="stat-value">{{ lessonService.completedLessons() }}</span>
         </div>
         
         <div class="stat-card">
-          <h3>Łączne XP</h3>
+          <h3>Total XP</h3>
           <span class="stat-value">{{ lessonService.totalXP() }}</span>
         </div>
         
         <div class="stat-card">
-          <h3>Aktualna seria</h3>
+          <h3>Current Streak</h3>
           <span class="stat-value">{{ lessonService.currentStreak() }}</span>
         </div>
       </div>

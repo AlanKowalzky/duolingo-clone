@@ -8,8 +8,8 @@ import { RouterModule } from '@angular/router';
   template: `
     <div class="not-found">
       <h1>404</h1>
-      <p>Strona nie została znaleziona</p>
-      <a routerLink="/lessons" class="home-btn">Powrót do lekcji</a>
+      <p>Page not found</p>
+      <a routerLink="/lessons" class="home-btn">Back to Lessons</a>
     </div>
   `,
   styles: [`

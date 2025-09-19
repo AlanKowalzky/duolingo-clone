@@ -41,8 +41,8 @@ import { Question, QuestionResult } from '../../shared/models/lesson.model';
                   type="text" 
                   class="text-input"
                   [value]="selectedAnswer()"
-                  (input)="selectAnswer($event.target.value)"
-                  placeholder="Wpisz odpowiedź...">
+                  (input)="onInputChange($event)"
+                  placeholder="Type your answer...">
               }
             }
 
@@ -51,7 +51,7 @@ import { Question, QuestionResult } from '../../shared/models/lesson.model';
                 class="check-btn"
                 [disabled]="!selectedAnswer()"
                 (click)="checkAnswer()">
-                Sprawdź
+                Check
               </button>
             </div>
           </div>
@@ -147,8 +147,8 @@ export class LessonDetailComponent {
   readonly id = input.required<string>();
   
   // Component state signals
-  private readonly currentQuestionIndex = signal(0);
-  private readonly selectedAnswer = signal('');
+  readonly currentQuestionIndex = signal(0);
+  readonly selectedAnswer = signal('');
   private readonly results = signal<QuestionResult[]>([]);
 
   // Computed values
@@ -169,6 +169,11 @@ export class LessonDetailComponent {
 
   selectAnswer(answer: string): void {
     this.selectedAnswer.set(answer);
+  }
+
+  onInputChange(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    this.selectAnswer(target.value);
   }
 
   checkAnswer(): void {

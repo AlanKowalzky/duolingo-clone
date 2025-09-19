@@ -9,19 +9,19 @@ import { LessonService } from '../../core/services/lesson.service';
   imports: [CommonModule, RouterModule],
   template: `
     <div class="lessons-container">
-      <h1>Twoje lekcje</h1>
+      <h1>Your Lessons</h1>
       
       <div class="progress-stats">
         <div class="stat">
-          <span class="label">Ukończone:</span>
+          <span class="label">Completed:</span>
           <span class="value">{{ lessonService.completedLessons() }}</span>
         </div>
         <div class="stat">
-          <span class="label">Łączne XP:</span>
+          <span class="label">Total XP:</span>
           <span class="value">{{ lessonService.totalXP() }}</span>
         </div>
         <div class="stat">
-          <span class="label">Seria:</span>
+          <span class="label">Streak:</span>
           <span class="value">{{ lessonService.currentStreak() }}</span>
         </div>
       </div>
@@ -32,12 +32,12 @@ import { LessonService } from '../../core/services/lesson.service';
             <h3>{{ lesson.title }}</h3>
             <p>{{ lesson.description }}</p>
             <div class="lesson-meta">
-              <span class="level">Poziom {{ lesson.level }}</span>
+              <span class="level">Level {{ lesson.level }}</span>
               <span class="xp">{{ lesson.xpReward }} XP</span>
             </div>
             @if (!lesson.isLocked) {
               <a [routerLink]="['/lesson', lesson.id]" class="start-btn">
-                Rozpocznij
+                Start
               </a>
             }
           </div>
