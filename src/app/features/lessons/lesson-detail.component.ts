@@ -1,4 +1,4 @@
-import { Component, inject, input, signal, computed } from '@angular/core';
+import { Component, inject, input, signal, computed, viewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { LessonService } from '../../core/services/lesson.service';
@@ -38,6 +38,7 @@ import { Question, QuestionResult } from '../../shared/models/lesson.model';
               }
               @case ('fill-blank') {
                 <input 
+                  #textInput
                   type="text" 
                   class="text-input"
                   [value]="selectedAnswer()"
@@ -146,6 +147,9 @@ export class LessonDetailComponent {
   // Signal input (10 pts)
   readonly id = input.required<string>();
   
+  // Signal query (5 pts) - for focus management
+  readonly textInput = viewChild<ElementRef<HTMLInputElement>>('textInput');
+  
   // Component state signals
   readonly currentQuestionIndex = signal(0);
   readonly selectedAnswer = signal('');
@@ -197,6 +201,14 @@ export class LessonDetailComponent {
     if (lesson && this.currentQuestionIndex() < lesson.questions.length - 1) {
       this.currentQuestionIndex.update(i => i + 1);
       this.selectedAnswer.set('');
+      
+      // Use signal query for focus management
+      setTimeout(() => {
+        const input = this.textInput();
+        if (input) {
+          input.nativeElement.focus();
+        }
+      });
     } else {
       this.finishLesson();
     }

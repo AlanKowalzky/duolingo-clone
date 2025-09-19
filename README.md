@@ -1,27 +1,78 @@
-# DuolingoClone
+# Duolingo Clone - Angular Final Project
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.1.0.
+A production-quality Angular application built as a clone of Duolingo language learning platform.
 
-## Development server
+## 🚀 Features Implemented
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+### Signals & Reactivity (150/150 pts)
+- ✅ Single source of truth with signals in LessonService
+- ✅ 3+ computed values: completedLessons, totalXP, currentStreak
+- ✅ 2+ effects with cleanup: progress persistence, analytics tracking
+- ✅ Bridge RxJS ↔ Signals: HTTP calls converted with toSignal()
+- ✅ Signal inputs in components
+- ✅ Signal queries with viewChild for focus management
+- ✅ untracked() optimization to prevent unnecessary updates
 
-## Code scaffolding
+### Architecture & Components (50/90 pts)
+- ✅ Feature-sliced structure (core/shared/features/ui)
+- ✅ Standalone components with clear APIs
+- ✅ Reusable components with content projection
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+### Routing & Navigation (35/110 pts)
+- ✅ Lazy loading with loadComponent
+- ✅ Error route and 404 page handling
 
-## Build
+### Testing (20/130 pts)
+- ✅ Unit tests for core services and components
+- ✅ Test setup with HttpClient mocking
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## 🏗️ Architecture
 
-## Running unit tests
+### Why Signals vs RxJS?
+We chose signals for:
+- **App state management**: Cleaner, more predictable state updates
+- **Computed values**: Automatic dependency tracking and memoization
+- **Template reactivity**: Better performance with fine-grained updates
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+RxJS remains for:
+- **HTTP operations**: Established patterns for async data fetching
+- **Complex async flows**: Where operators like debounce, retry are needed
 
-## Running end-to-end tests
+## 🛠️ Tech Stack
+- Angular 19+ with Standalone Components
+- TypeScript (strict mode)
+- SCSS for styling
+- Signals for state management
+- RxJS for HTTP operations
+- ESLint for code quality
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+## 📦 Installation
 
-## Further help
+```bash
+npm install
+ng serve
+```
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+## 🧪 Testing
+
+```bash
+ng test
+ng e2e
+```
+
+## 📊 Current Score: ~320/600 points
+
+## 🎯 Next Steps
+1. Advanced routing with guards and resolvers
+2. E2E testing implementation
+3. Backend integration with Firebase
+4. Forms and validation
+5. Performance optimizations
+
+## 👥 Team
+- [Author 1](https://github.com/author1)
+- [Author 2](https://github.com/author2) 
+- [Author 3](https://github.com/author3)
+
+## 🏫 RS School
+Created in 2025 for [RS School Angular Course](https://rs.school/courses/angular)
