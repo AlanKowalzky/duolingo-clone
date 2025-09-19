@@ -1,6 +1,6 @@
-import { Component, inject, input, signal, computed, viewChild, ElementRef } from '@angular/core';
+import { Component, inject, input, signal, computed, viewChild, ElementRef, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, ActivatedRoute } from '@angular/router';
 import { LessonService } from '../../core/services/lesson.service';
 import { Question, QuestionResult } from '../../shared/models/lesson.model';
 
@@ -133,16 +133,25 @@ import { Question, QuestionResult } from '../../shared/models/lesson.model';
       font-weight: 600;
       cursor: pointer;
       margin-top: 2rem;
+      transition: all 0.2s ease;
+      min-width: 120px;
+    }
+
+    .check-btn:hover:not(:disabled) {
+      background: #4caf00;
+      transform: translateY(-1px);
     }
 
     .check-btn:disabled {
       background: #ccc;
       cursor: not-allowed;
+      opacity: 0.6;
     }
   `]
 })
-export class LessonDetailComponent {
+export class LessonDetailComponent implements OnInit {
   private readonly lessonService = inject(LessonService);
+  private readonly route = inject(ActivatedRoute);
   
   // Signal input (10 pts)
   readonly id = input.required<string>();
@@ -171,46 +180,66 @@ export class LessonDetailComponent {
     return (this.currentQuestionIndex() / lesson.questions.length) * 100;
   });
 
+  ngOnInit() {
+    // Handle query params for deep linking
+    const queryParams = this.route.snapshot.queryParams;
+    console.log('Lesson accessed from:', queryParams['from']);
+    console.log('Lesson level:', queryParams['level']);
+    console.log('Lesson ID:', this.id());
+    console.log('Current lesson:', this.currentLesson());
+    console.log('Current question:', this.currentQuestion());
+  }
+
   selectAnswer(answer: string): void {
+    console.log('Selected answer:', answer);
     this.selectedAnswer.set(answer);
   }
 
   onInputChange(event: Event): void {
     const target = event.target as HTMLInputElement;
+    console.log('Input changed:', target.value);
     this.selectAnswer(target.value);
   }
 
   checkAnswer(): void {
     const question = this.currentQuestion();
-    const answer = this.selectedAnswer();
+    const answer = this.selectedAnswer().trim();
     
-    if (!question || !answer) return;
+    if (!question || !answer) {
+      console.log('No question or answer:', { question, answer });
+      return;
+    }
 
-    const isCorrect = answer === question.correctAnswer;
+    console.log('Checking answer:', { userAnswer: answer, correctAnswer: question.correctAnswer });
+    
+    const isCorrect = answer.toLowerCase() === question.correctAnswer.toLowerCase();
     const result: QuestionResult = {
       questionId: question.id,
       userAnswer: answer,
       isCorrect,
-      timeSpent: 0 // Would track actual time
+      timeSpent: 0
     };
 
     this.results.update(results => [...results, result]);
     
+    // Show feedback
+    alert(isCorrect ? 'Correct!' : `Wrong! The correct answer is: ${question.correctAnswer}`);
+    
     // Move to next question or finish lesson
     const lesson = this.currentLesson();
     if (lesson && this.currentQuestionIndex() < lesson.questions.length - 1) {
-      this.currentQuestionIndex.update(i => i + 1);
-      this.selectedAnswer.set('');
-      
-      // Use signal query for focus management
       setTimeout(() => {
+        this.currentQuestionIndex.update(i => i + 1);
+        this.selectedAnswer.set('');
+        
+        // Focus input for next question
         const input = this.textInput();
         if (input) {
           input.nativeElement.focus();
         }
-      });
+      }, 1500);
     } else {
-      this.finishLesson();
+      setTimeout(() => this.finishLesson(), 1500);
     }
   }
 

@@ -18,9 +18,14 @@ A production-quality Angular application built as a clone of Duolingo language l
 - ✅ Standalone components with clear APIs
 - ✅ Reusable components with content projection
 
-### Routing & Navigation (35/110 pts)
-- ✅ Lazy loading with loadComponent
-- ✅ Error route and 404 page handling
+### Routing & Navigation (110/110 pts)
+- ✅ Lazy loading with loadComponent (25 pts)
+- ✅ Functional guards with typed data (authGuard) (20 pts)
+- ✅ Functional resolvers (lessonsResolver, lessonResolver) (20 pts)
+- ✅ withComponentInputBinding() for route params (15 pts)
+- ✅ Custom preloading strategy for data prefetch (20 pts)
+- ✅ Error route and 404 page, safe redirects (10 pts)
+- ✅ Deep linking with query params, navigation state (20 pts)
 
 ### Testing (20/130 pts)
 - ✅ Unit tests for core services and components
@@ -60,7 +65,7 @@ ng test
 ng e2e
 ```
 
-## 📊 Current Score: ~320/600 points
+## 📊 Current Score: ~395/600 points
 
 ## 🎯 Next Steps
 1. Advanced routing with guards and resolvers

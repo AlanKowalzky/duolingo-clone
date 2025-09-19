@@ -1,7 +1,8 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, ActivatedRoute } from '@angular/router';
 import { LessonService } from '../../core/services/lesson.service';
+import { Lesson } from '../../shared/models/lesson.model';
 
 @Component({
   selector: 'app-lessons',
@@ -36,7 +37,9 @@ import { LessonService } from '../../core/services/lesson.service';
               <span class="xp">{{ lesson.xpReward }} XP</span>
             </div>
             @if (!lesson.isLocked) {
-              <a [routerLink]="['/lesson', lesson.id]" class="start-btn">
+              <a [routerLink]="['/lesson', lesson.id]" 
+                 [queryParams]="{from: 'lessons', level: lesson.level}" 
+                 class="start-btn">
                 Start
               </a>
             }
@@ -103,6 +106,16 @@ import { LessonService } from '../../core/services/lesson.service';
     }
   `]
 })
-export class LessonsComponent {
+export class LessonsComponent implements OnInit {
   readonly lessonService = inject(LessonService);
+  private readonly route = inject(ActivatedRoute);
+  
+  // Use resolved data with withComponentInputBinding
+  readonly lessons = input<Lesson[]>();
+  
+  ngOnInit() {
+    // Access resolved data
+    const resolvedLessons = this.route.snapshot.data['lessons'];
+    console.log('Resolved lessons:', resolvedLessons);
+  }
 }
