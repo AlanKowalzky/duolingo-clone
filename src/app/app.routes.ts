@@ -6,13 +6,14 @@ import { lessonResolver } from './core/resolvers/lesson.resolver';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: '/lessons',
+    redirectTo: '/login',
     pathMatch: 'full'
   },
   {
     path: 'lessons',
     loadComponent: () => import('./features/lessons/lessons.component').then(m => m.LessonsComponent),
-    resolve: { lessons: lessonsResolver }
+    resolve: { lessons: lessonsResolver },
+    canActivate: [authGuard]
   },
   {
     path: 'lesson/:id',

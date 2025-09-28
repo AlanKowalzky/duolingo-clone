@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Duolingo Clone - Midterm Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js/dist/theme/black.css">
+  <style>
+    .mermaid {
+      font-size: 0.6em;
+    }
+  </style>
+</head>
+<body>
+<div class="reveal">
+  <div class="slides">
+
+    <!-- Slide 1 -->
+    <section>
+      <h2>🦉 DUOLINGO CLONE</h2>
+      <p>Midterm Demo</p>
+      <p>Angular 17 | Signals | Standalone Components</p>
+    </section>
+
+    <!-- Slide 2 -->
+    <section>
+      <h3>Project Overview</h3>
+      <ul>
+        <li>Language Learning Application</li>
+        <li>Interactive lessons with gamification</li>
+        <li>Modern Angular 17 architecture</li>
+        <li>Focus: Signals + Standalone Components</li>
+      </ul>
+    </section>
+
+    <!-- Slide 3 -->
+    <section>
+      <h3>System Architecture</h3>
+      <pre class="mermaid">
+graph TD
+  A["Frontend (Angular 17)"] --> B["Standalone Components"]
+  A --> C["Angular Signals"]
+  A --> D["Custom Preloading"]
+  A --> E["Route Guards"]
+
+  F["Data Layer"] --> G["Mock API Services"]
+  F --> H["Local Storage"]
+  F --> I["Progress Tracking"]
+
+  J["Key Features"] --> K["Authentication Flow"]
+  J --> L["Interactive Lessons"]
+  J --> M["Progress Statistics"]
+  J --> N["Responsive Design"]
+      </pre>
+    </section>
+
+    <!-- Slide 4 -->
+    <section>
+      <h3>Signals Flow (Advanced)</h3>
+      <pre class="mermaid">
+flowchart TD
+  UserAction["User Action"] --> LessonComponent["Lesson Component"]
+  LessonComponent --> LessonStore["Lesson Signals Store"]
+  LessonStore --> ComputedProgress["Computed Progress"]
+  LessonStore --> ComputedXP["Computed XP"]
+  ComputedProgress --> LessonUI["Lesson UI Update"]
+  ComputedXP --> ProgressUI["Progress UI Update"]
+  LessonStore --> Effects["Effects: Save to Storage, Analytics"]
+  LessonComponent --> EventHandler["Event Handling / Input"]
+  EventHandler --> LessonStore
+  LessonStore --> BackendAPI["HTTP GET/POST to Firebase"]
+  Effects --> Cleanup["Effect Cleanup / unsubscribe"]
+  Cleanup --> LessonStore
+      </pre>
+    </section>
+
+    <!-- Slide 5 -->
+    <section>
+      <h3>Project Status Overview</h3>
+      <pre class="mermaid">
+graph TD
+  A["Duolingo Clone Project"] --> B["Core Structure"]
+  A --> C["Features"]
+  A --> D["Missing Components"]
+
+  B --> B1["Routing & Lazy Loading"]
+  B --> B2["Standalone Components"]
+  B --> B3["Guards & Resolvers"]
+  B --> B4["Services & Models"]
+  B --> B5["Angular Signals"]
+
+  C --> C1["Login Component"]
+  C --> C2["Lessons List"]
+  C --> C3["Lesson Detail"]
+  C --> C4["Profile Stats"]
+  C --> C5["404 Page"]
+
+  D --> D1["Progress Tracking"]
+  D --> D2["Interceptors"]
+  D --> D3["Custom Directives"]
+  D --> D4["Custom Pipes"]
+  D --> D5["UI Components"]
+  D --> D6["Tests"]
+      </pre>
+    </section>
+
+    <!-- Slide 6 -->
+    <section>
+      <h3>Feature Completion Status</h3>
+      <pre class="mermaid">
+pie title Implementation Progress
+  "Completed" : 70
+  "In Progress" : 15
+  "Not Started" : 15
+      </pre>
+    </section>
+
+    <!-- Slide 7 -->
+    <section>
+      <h3>Priority Tasks</h3>
+      <pre class="mermaid">
+flowchart LR
+  A["High Priority"] --> A1["Progress Tracking"]
+  A --> A2["Hearts System"]
+  A --> A3["XP Calculation"]
+
+  B["Medium Priority"] --> B1["Audio Support"]
+  B --> B2["Timer System"]
+  B --> B3["Streak Tracking"]
+
+  C["Low Priority"] --> C1["Custom Directives"]
+  C --> C2["Custom Pipes"]
+  C --> C3["UI Components"]
+
+  style A fill:#ff6b6b
+  style B fill:#ffd93d
+  style C fill:#6bcf7f
+      </pre>
+    </section>
+
+    <!-- Slide 8 -->
+    <section>
+      <h3>Component Architecture Status</h3>
+      <pre class="mermaid">
+graph TB
+  subgraph "Implemented"
+    A1["LoginComponent"]
+    A2["LessonsComponent"]
+    A3["LessonDetailComponent"]
+    A4["ProfileComponent"]
+    A5["NotFoundComponent"]
+  end
+
+  subgraph "Missing"
+    B1["ProgressComponent"]
+    B2["UI Components"]
+    B3["Custom Directives"]
+    B4["Custom Pipes"]
+    B5["Interceptors"]
+  end
+
+  subgraph "Needs Work"
+    C1["Audio Support"]
+    C2["Timer System"]
+    C3["Hearts System"]
+    C4["Real Progress Saving"]
+  end
+      </pre>
+    </section>
+
+    <!-- Slide 9 -->
+    <section>
+      <h3>Feature Structure</h3>
+      <pre class="mermaid">
+graph TD
+  A["src/app"] --> B["core/"]
+  A --> C["shared/"]
+  A --> D["features/"]
+  A --> E["ui/"]
+
+  B --> B1["services/"]
+  B --> B2["guards/"]
+  B --> B3["interceptors/"]
+
+  B1 --> B1a["lesson.service.ts"]
+  B2 --> B2a["auth.guard.ts"]
+  B3 --> B3a["http.interceptor.ts"]
+
+  C --> C1["models/"]
+  C --> C2["components/"]
+  C --> C3["pipes/"]
+  C --> C4["directives/"]
+
+  C1 --> C1a["user.model.ts"]
+  C1 --> C1b["lesson.model.ts"]
+  C2 --> C2a["not-found.component.ts"]
+  C3 --> C3a["custom.pipe.ts"]
+  C4 --> C4a["custom.directive.ts"]
+
+  D --> D1["auth/"]
+  D --> D2["lessons/"]
+  D --> D3["profile/"]
+  D --> D4["progress/"]
+
+  D1 --> D1a["login.component.ts"]
+  D2 --> D2a["lessons.component.ts"]
+  D2 --> D2b["lesson-detail.component.ts"]
+  D3 --> D3a["profile.component.ts"]
+  D4 --> D4a["progress.component.ts"]
+
+  E --> E1["components/"]
+  E1 --> E1a["button.component.ts"]
+  E1 --> E1b["card.component.ts"]
+      </pre>
+    </section>
+
+    <!-- Slide 10 -->
+    <section>
+      <h3>Routing Structure</h3>
+      <pre class="mermaid">
+graph LR
+  A["/"] --> B["redirect to /lessons"]
+  C["/lessons"] --> D["LessonsComponent - Lazy"]
+  E["/lesson/:id"] --> F["LessonDetailComponent - Lazy"]
+  G["/profile"] --> H["ProfileComponent - Lazy"]
+  I["/**"] --> J["NotFoundComponent - Lazy"]
+      </pre>
+    </section>
+
+    <!-- Slide 11 -->
+    <section>
+      <h3>Challenges & Next Steps</h3>
+      <ul>
+        <li>Signals learning curve & state synchronization</li>
+        <li>Progress persistence still missing</li>
+        <li>Next: Hearts system, XP, Audio & Timer</li>
+      </ul>
+    </section>
+
+    <!-- Slide 12 -->
+    <section>
+      <h2>Thank You 🦉</h2>
+      <p>Questions?</p>
+    </section>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js-mermaid-plugin/plugin/mermaid/mermaid.js"></script>
+<script>
+  Reveal.initialize({
+    plugins: [ RevealMermaid ]
+  });
+</script>
+</body>
+</html>
