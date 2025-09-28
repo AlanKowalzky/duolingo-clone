@@ -2,6 +2,7 @@ import { Component, inject, input, signal, computed, viewChild, ElementRef, OnIn
 import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute } from '@angular/router';
 import { LessonService } from '../../core/services/lesson.service';
+import { HeartsService } from '../../core/services/hearts.service';
 import { Question, QuestionResult } from '../../shared/models/lesson.model';
 
 @Component({
@@ -13,6 +14,11 @@ import { Question, QuestionResult } from '../../shared/models/lesson.model';
       @if (currentLesson(); as lesson) {
         <div class="lesson-header">
           <h1>{{ lesson.title }}</h1>
+          <div class="hearts-display">
+            @for (heart of [].constructor(heartsService.hearts()); track $index) {
+              <span class="heart">❤️</span>
+            }
+          </div>
           <div class="progress-bar">
             <div class="progress-fill" [style.width.%]="progressPercentage()"></div>
           </div>
@@ -151,6 +157,7 @@ import { Question, QuestionResult } from '../../shared/models/lesson.model';
 })
 export class LessonDetailComponent implements OnInit {
   private readonly lessonService = inject(LessonService);
+  private readonly heartsService = inject(HeartsService);
   private readonly route = inject(ActivatedRoute);
   
   // Signal input (10 pts)
@@ -249,7 +256,10 @@ export class LessonDetailComponent implements OnInit {
     const totalQuestions = this.results().length;
     const score = Math.round((correctAnswers / totalQuestions) * 100);
     
+    // Update lesson service with progress
+    this.lessonService.completeLesson(this.id(), score);
+    
     console.log(`Lesson completed with score: ${score}%`);
-    // Would update user progress here
+    alert(`Lesson completed! Score: ${score}%`);
   }
 }

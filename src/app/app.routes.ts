@@ -27,6 +27,11 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
   {
+    path: 'progress',
+    loadComponent: () => import('./features/progress/progress.component').then(m => m.ProgressComponent),
+    canActivate: [authGuard]
+  },
+  {
     path: 'login',
     loadComponent: () => import('./features/auth/login.component').then(m => m.LoginComponent)
   },

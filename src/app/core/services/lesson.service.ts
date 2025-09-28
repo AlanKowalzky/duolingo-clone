@@ -65,4 +65,63 @@ export class LessonService {
     // untracked() prevents re-triggering when user data changes
     console.log(`User ${userId || 'anonymous'} completed ${completed} lessons`);
   }
+
+  // Missing critical methods
+  updateUserProgress(lessonId: string, score: number): void {
+    const existing = this._userProgress().find(p => p.lessonId === lessonId);
+    if (existing) {
+      this._userProgress.update(progress => 
+        progress.map(p => p.lessonId === lessonId 
+          ? { ...p, score, attempts: p.attempts + 1 }
+          : p
+        )
+      );
+    } else {
+      this._userProgress.update(progress => [...progress, {
+        userId: 'current-user',
+        lessonId,
+        completed: false,
+        score,
+        attempts: 1
+      }]);
+    }
+  }
+
+  completeLesson(lessonId: string, score: number): void {
+    this._userProgress.update(progress => {
+      const existing = progress.find(p => p.lessonId === lessonId);
+      if (existing) {
+        return progress.map(p => p.lessonId === lessonId 
+          ? { ...p, completed: true, score, completedAt: new Date() }
+          : p
+        );
+      }
+      return [...progress, {
+        userId: 'current-user',
+        lessonId,
+        completed: true,
+        score,
+        completedAt: new Date(),
+        attempts: 1
+      }];
+    });
+  }
+
+  initializeUser(): void {
+    const saved = localStorage.getItem('user-data');
+    if (saved) {
+      this._user.set(JSON.parse(saved));
+    } else {
+      this._user.set({
+        id: 'user-1',
+        email: 'user@example.com',
+        displayName: 'Demo User',
+        streak: 0,
+        totalXP: 0,
+        hearts: 5,
+        currentLesson: 1,
+        createdAt: new Date()
+      });
+    }
+  }
 }
