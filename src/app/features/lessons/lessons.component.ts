@@ -15,7 +15,7 @@ import { ButtonComponent } from '../../ui/components/button.component';
     <div class="lessons-container">
       <h1>Your Lessons</h1>
       
-      <div class="progress-stats">
+      <div class="progress-stats" data-cy="progress-stats">
         <div class="stat">
           <span class="label">Completed:</span>
           <span class="value">{{ lessonService.completedLessons() }}</span>

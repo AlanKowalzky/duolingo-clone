@@ -38,7 +38,7 @@ import { TimeFormatPipe } from '../../shared/pipes/time-format.pipe';
 
         @if (currentQuestion(); as question) {
           <div class="question-container">
-            <h2>{{ question.text }}</h2>
+            <h2 data-cy="question-text">{{ question.text }}</h2>
             
             @switch (question.type) {
               @case ('multiple-choice') {
@@ -47,7 +47,8 @@ import { TimeFormatPipe } from '../../shared/pipes/time-format.pipe';
                     <button 
                       class="option-btn"
                       [class.selected]="selectedAnswer() === option"
-                      (click)="selectAnswer(option)">
+                      (click)="selectAnswer(option)"
+                      data-cy="option-button">
                       {{ option }}
                     </button>
                   }
@@ -68,7 +69,8 @@ import { TimeFormatPipe } from '../../shared/pipes/time-format.pipe';
               <button 
                 class="check-btn"
                 [disabled]="!selectedAnswer()"
-                (click)="checkAnswer()">
+                (click)="checkAnswer()"
+                data-cy="check-answer">
                 Check
               </button>
             </div>

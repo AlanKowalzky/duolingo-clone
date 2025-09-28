@@ -45,7 +45,8 @@ import { CardComponent } from '../../ui/components/card.component';
               type="submit" 
               [disabled]="loginForm.invalid || isLoading()"
               [loading]="isLoading()"
-              [fullWidth]="true">
+              [fullWidth]="true"
+              data-cy="login-button">
               Login
             </app-button>
           </div>
