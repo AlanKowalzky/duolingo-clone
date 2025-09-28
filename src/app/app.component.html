@@ -1,0 +1,30 @@
+<nav class="navbar">
+  <div class="nav-brand">
+    <h1>Duolingo Clone</h1>
+  </div>
+  <div class="nav-links">
+    <a routerLink="/lessons" routerLinkActive="active">Lessons</a>
+    <a routerLink="/profile" routerLinkActive="active">Profile</a>
+  </div>
+</nav>
+
+<main class="main-content">
+  <router-outlet></router-outlet>
+</main>
+
+<footer class="footer">
+  <div class="footer-content">
+    <div class="authors">
+      <a href="https://github.com/author1" target="_blank">Author 1</a>
+      <a href="https://github.com/author2" target="_blank">Author 2</a>
+      <a href="https://github.com/author3" target="_blank">Author 3</a>
+    </div>
+    <div class="school-info">
+      <span>2025</span>
+      <a href="https://rs.school/courses/angular" target="_blank">
+        <img src="https://rs.school/_next/static/media/rss-logo.c19ce1b4.svg" alt="RS School logo" height="20">
+        Angular Course
+      </a>
+    </div>
+  </div>
+</footer>
