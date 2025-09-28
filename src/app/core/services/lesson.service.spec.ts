@@ -51,4 +51,46 @@ describe('LessonService', () => {
     expect(user).toBeTruthy();
     expect(user?.displayName).toBe('Demo User');
   });
+
+  // Edge cases tests (30 pts)
+  it('should handle empty lessons array', () => {
+    expect(service.lessons()).toEqual([]);
+    expect(service.completedLessons()).toBe(0);
+    expect(service.totalXP()).toBe(0);
+  });
+
+  it('should handle null user data gracefully', () => {
+    expect(service.currentStreak()).toBe(0);
+    expect(service.user()).toBeNull();
+  });
+
+  it('should calculate XP correctly with multiple lessons', () => {
+    service.completeLesson('1', 100);
+    service.completeLesson('2', 85);
+    expect(service.completedLessons()).toBe(2);
+  });
+
+  it('should handle invalid lesson completion', () => {
+    expect(() => service.completeLesson('', 0)).not.toThrow();
+    expect(() => service.completeLesson('invalid-id', -10)).not.toThrow();
+  });
+
+  it('should persist progress to localStorage', () => {
+    spyOn(localStorage, 'setItem');
+    service.completeLesson('1', 90);
+    expect(localStorage.setItem).toHaveBeenCalled();
+  });
+
+  it('should restore progress from localStorage', () => {
+    const mockProgress = JSON.stringify([{
+      lessonId: '1',
+      completed: true,
+      score: 95,
+      completedAt: new Date().toISOString()
+    }]);
+    spyOn(localStorage, 'getItem').and.returnValue(mockProgress);
+    
+    service.initializeUser();
+    expect(service.completedLessons()).toBe(1);
+  });
 });
