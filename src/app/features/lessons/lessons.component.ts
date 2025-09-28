@@ -1,13 +1,16 @@
-import { Component, inject, input, OnInit } from '@angular/core';
+import { Component, inject, input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute } from '@angular/router';
 import { LessonService } from '../../core/services/lesson.service';
 import { Lesson } from '../../shared/models/lesson.model';
+import { CardComponent } from '../../ui/components/card.component';
+import { ButtonComponent } from '../../ui/components/button.component';
 
 @Component({
   selector: 'app-lessons',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, CardComponent, ButtonComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="lessons-container">
       <h1>Your Lessons</h1>
@@ -29,21 +32,30 @@ import { Lesson } from '../../shared/models/lesson.model';
 
       <div class="lessons-grid">
         @for (lesson of lessonService.lessons(); track lesson.id) {
-          <div class="lesson-card" [class.locked]="lesson.isLocked">
-            <h3>{{ lesson.title }}</h3>
+          <app-card [title]="lesson.title" [variant]="lesson.isLocked ? 'secondary' : 'primary'">
+            <div slot="header">
+              <span class="level">Level {{ lesson.level }}</span>
+            </div>
+            
             <p>{{ lesson.description }}</p>
             <div class="lesson-meta">
-              <span class="level">Level {{ lesson.level }}</span>
               <span class="xp">{{ lesson.xpReward }} XP</span>
             </div>
-            @if (!lesson.isLocked) {
-              <a [routerLink]="['/lesson', lesson.id]" 
-                 [queryParams]="{from: 'lessons', level: lesson.level}" 
-                 class="start-btn">
-                Start
-              </a>
-            }
-          </div>
+            
+            <div slot="footer">
+              @if (!lesson.isLocked) {
+                <app-button variant="primary" size="small">
+                  <a [routerLink]="['/lesson', lesson.id]" 
+                     [queryParams]="{from: 'lessons', level: lesson.level}" 
+                     style="text-decoration: none; color: inherit;">
+                    Start
+                  </a>
+                </app-button>
+              } @else {
+                <app-button variant="outline" [disabled]="true">Locked</app-button>
+              }
+            </div>
+          </app-card>
         }
       </div>
     </div>

@@ -1,46 +1,151 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { LessonService } from '../../core/services/lesson.service';
+import { ButtonComponent } from '../../ui/components/button.component';
+import { CardComponent } from '../../ui/components/card.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ReactiveFormsModule, ButtonComponent, CardComponent],
   template: `
     <div class="login-container">
-      <h1>Login to Duolingo Clone</h1>
-      <button (click)="login()" class="login-btn">
-        Mock Login
-      </button>
+      <app-card title="Login to Duolingo Clone" variant="primary">
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+          <div class="form-group">
+            <label for="email">Email:</label>
+            <input 
+              id="email"
+              type="email" 
+              formControlName="email"
+              class="form-control"
+              [class.error]="emailError()">
+            @if (emailError()) {
+              <span class="error-text">{{ emailError() }}</span>
+            }
+          </div>
+          
+          <div class="form-group">
+            <label for="password">Password:</label>
+            <input 
+              id="password"
+              type="password" 
+              formControlName="password"
+              class="form-control"
+              [class.error]="passwordError()">
+            @if (passwordError()) {
+              <span class="error-text">{{ passwordError() }}</span>
+            }
+          </div>
+          
+          <div slot="footer">
+            <app-button 
+              type="submit" 
+              [disabled]="loginForm.invalid || isLoading()"
+              [loading]="isLoading()"
+              [fullWidth]="true">
+              Login
+            </app-button>
+          </div>
+        </form>
+      </app-card>
     </div>
   `,
   styles: [`
     .login-container {
       display: flex;
-      flex-direction: column;
-      align-items: center;
       justify-content: center;
-      height: 50vh;
-      gap: 2rem;
+      align-items: center;
+      min-height: 60vh;
+      padding: 2rem;
     }
-
-    .login-btn {
-      padding: 1rem 2rem;
-      background: #58cc02;
-      color: white;
-      border: none;
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    .form-control {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid #e9ecef;
       border-radius: 8px;
-      font-size: 1.1rem;
-      cursor: pointer;
+      font-size: 1rem;
+    }
+    .form-control.error {
+      border-color: #dc3545;
+    }
+    .error-text {
+      color: #dc3545;
+      font-size: 0.875rem;
+      margin-top: 0.25rem;
+      display: block;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
     }
   `]
 })
 export class LoginComponent {
   private readonly router = inject(Router);
+  private readonly lessonService = inject(LessonService);
+  private readonly fb = inject(FormBuilder);
+  
+  readonly isLoading = signal(false);
+  
+  readonly loginForm = this.fb.group({
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required, Validators.minLength(6)]]
+  });
+  
+  readonly emailError = signal('');
+  readonly passwordError = signal('');
+  
+  onSubmit(): void {
+    if (this.loginForm.valid) {
+      this.isLoading.set(true);
+      this.clearErrors();
+      
+      // Simulate API call
+      setTimeout(() => {
+        this.login();
+        this.isLoading.set(false);
+      }, 1000);
+    } else {
+      this.validateForm();
+    }
+  }
+  
+  private validateForm(): void {
+    const emailControl = this.loginForm.get('email');
+    const passwordControl = this.loginForm.get('password');
+    
+    if (emailControl?.errors) {
+      if (emailControl.errors['required']) {
+        this.emailError.set('Email is required');
+      } else if (emailControl.errors['email']) {
+        this.emailError.set('Please enter a valid email');
+      }
+    }
+    
+    if (passwordControl?.errors) {
+      if (passwordControl.errors['required']) {
+        this.passwordError.set('Password is required');
+      } else if (passwordControl.errors['minlength']) {
+        this.passwordError.set('Password must be at least 6 characters');
+      }
+    }
+  }
+  
+  private clearErrors(): void {
+    this.emailError.set('');
+    this.passwordError.set('');
+  }
 
-  login(): void {
-    // Mock login - set token
+  private login(): void {
     localStorage.setItem('user-token', 'mock-token');
+    this.lessonService.initializeUser();
     this.router.navigate(['/lessons']);
   }
 }

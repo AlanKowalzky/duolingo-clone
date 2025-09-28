@@ -22,7 +22,26 @@ export class LessonService {
   private readonly _user = signal<User | null>(null);
 
   // Public readonly signals
-  readonly lessons = computed(() => this.lessonsFromHttp() || []);
+  readonly lessons = computed(() => {
+    const baseLessons = this.lessonsFromHttp() || [];
+    const progress = this._userProgress();
+    
+    return baseLessons.map((lesson, index) => {
+      if (index === 0) {
+        // Pierwsza lekcja zawsze odblokowana
+        return { ...lesson, isLocked: false };
+      }
+      
+      // Sprawdź czy poprzednia lekcja jest ukończona
+      const previousLessonId = baseLessons[index - 1]?.id;
+      const isPreviousCompleted = progress.some(p => p.lessonId === previousLessonId && p.completed);
+      
+      return {
+        ...lesson,
+        isLocked: !isPreviousCompleted
+      };
+    });
+  });
   readonly currentLesson = this._currentLesson.asReadonly();
   readonly userProgress = this._userProgress.asReadonly();
   readonly user = this._user.asReadonly();
@@ -41,6 +60,9 @@ export class LessonService {
   readonly currentStreak = computed(() => this._user()?.streak || 0);
 
   constructor() {
+    this.initializeProgress();
+    this.initializeUser();
+    
     // Effect for progress persistence (15 pts - 2+ effects with cleanup)
     effect(() => {
       const progress = this._userProgress();
@@ -56,6 +78,14 @@ export class LessonService {
         // Use untracked to avoid re-triggering on user changes
         const userId = untracked(() => this._user()?.id);
         this.trackProgress(completed, userId);
+      }
+    });
+    
+    // Effect for user data persistence
+    effect(() => {
+      const user = this._user();
+      if (user) {
+        localStorage.setItem('user-data', JSON.stringify(user));
       }
     });
   }
@@ -105,6 +135,20 @@ export class LessonService {
         attempts: 1
       }];
     });
+    
+    // Aktualizuj streak użytkownika
+    this._user.update(user => user ? {
+      ...user,
+      streak: user.streak + 1,
+      totalXP: this.totalXP()
+    } : null);
+  }
+
+  initializeProgress(): void {
+    const saved = localStorage.getItem('lesson-progress');
+    if (saved) {
+      this._userProgress.set(JSON.parse(saved));
+    }
   }
 
   initializeUser(): void {

@@ -30,4 +30,25 @@ describe('LessonService', () => {
     // Test computed signal
     expect(service.currentStreak()).toBe(0);
   });
+
+  it('should update user progress', () => {
+    service.updateUserProgress('1', 85);
+    const progress = service.userProgress();
+    expect(progress.length).toBe(1);
+    expect(progress[0].score).toBe(85);
+  });
+
+  it('should complete lesson', () => {
+    service.completeLesson('1', 90);
+    const progress = service.userProgress();
+    expect(progress[0].completed).toBe(true);
+    expect(progress[0].score).toBe(90);
+  });
+
+  it('should initialize user', () => {
+    service.initializeUser();
+    const user = service.user();
+    expect(user).toBeTruthy();
+    expect(user?.displayName).toBe('Demo User');
+  });
 });

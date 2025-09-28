@@ -1,23 +1,34 @@
 import { Component, inject, input, signal, computed, viewChild, ElementRef, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, ActivatedRoute } from '@angular/router';
+import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { LessonService } from '../../core/services/lesson.service';
 import { HeartsService } from '../../core/services/hearts.service';
+import { TimerService } from '../../core/services/timer.service';
+import { AudioService } from '../../core/services/audio.service';
 import { Question, QuestionResult } from '../../shared/models/lesson.model';
+import { TimeFormatPipe } from '../../shared/pipes/time-format.pipe';
 
 @Component({
   selector: 'app-lesson-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, TimeFormatPipe],
   template: `
     <div class="lesson-container">
       @if (currentLesson(); as lesson) {
         <div class="lesson-header">
           <h1>{{ lesson.title }}</h1>
-          <div class="hearts-display">
-            @for (heart of [].constructor(heartsService.hearts()); track $index) {
-              <span class="heart">❤️</span>
-            }
+          <div class="header-info">
+            <div class="hearts-display">
+              @for (heart of [].constructor(heartsService.hearts()); track $index) {
+                <span class="heart">❤️</span>
+              }
+            </div>
+            <div class="timer-display" [class.warning]="timerService.timeLeft() <= 10">
+              ⏰ {{ timerService.timeLeft() | timeFormat }}
+            </div>
+            <button class="audio-btn" (click)="audioService.toggleMute()">
+              {{ audioService.isMuted() ? '🔇' : '🔊' }}
+            </button>
           </div>
           <div class="progress-bar">
             <div class="progress-fill" [style.width.%]="progressPercentage()"></div>
@@ -153,25 +164,68 @@ import { Question, QuestionResult } from '../../shared/models/lesson.model';
       cursor: not-allowed;
       opacity: 0.6;
     }
+
+    .header-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 1rem 0;
+    }
+
+    .hearts-display {
+      display: flex;
+      gap: 0.25rem;
+    }
+
+    .timer-display {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #58cc02;
+      padding: 0.5rem 1rem;
+      background: #f0f8e8;
+      border-radius: 20px;
+    }
+
+    .timer-display.warning {
+      color: #ff4444;
+      background: #ffe8e8;
+      animation: pulse 1s infinite;
+    }
+
+    .audio-btn {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 50%;
+    }
+
+    .audio-btn:hover {
+      background: #f0f0f0;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
   `]
 })
 export class LessonDetailComponent implements OnInit {
   private readonly lessonService = inject(LessonService);
-  private readonly heartsService = inject(HeartsService);
+  readonly heartsService = inject(HeartsService);
+  readonly timerService = inject(TimerService);
+  readonly audioService = inject(AudioService);
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   
-  // Signal input (10 pts)
   readonly id = input.required<string>();
-  
-  // Signal query (5 pts) - for focus management
   readonly textInput = viewChild<ElementRef<HTMLInputElement>>('textInput');
   
-  // Component state signals
   readonly currentQuestionIndex = signal(0);
   readonly selectedAnswer = signal('');
   private readonly results = signal<QuestionResult[]>([]);
 
-  // Computed values
   readonly currentLesson = computed(() => 
     this.lessonService.lessons().find(l => l.id === this.id())
   );
@@ -183,28 +237,20 @@ export class LessonDetailComponent implements OnInit {
 
   readonly progressPercentage = computed(() => {
     const lesson = this.currentLesson();
-    if (!lesson) return 0;
-    return (this.currentQuestionIndex() / lesson.questions.length) * 100;
+    if (!lesson || lesson.questions.length === 0) return 0;
+    return ((this.currentQuestionIndex() + 1) / lesson.questions.length) * 100;
   });
 
   ngOnInit() {
-    // Handle query params for deep linking
-    const queryParams = this.route.snapshot.queryParams;
-    console.log('Lesson accessed from:', queryParams['from']);
-    console.log('Lesson level:', queryParams['level']);
-    console.log('Lesson ID:', this.id());
-    console.log('Current lesson:', this.currentLesson());
-    console.log('Current question:', this.currentQuestion());
+    this.timerService.startTimer(30);
   }
 
   selectAnswer(answer: string): void {
-    console.log('Selected answer:', answer);
     this.selectedAnswer.set(answer);
   }
 
   onInputChange(event: Event): void {
     const target = event.target as HTMLInputElement;
-    console.log('Input changed:', target.value);
     this.selectAnswer(target.value);
   }
 
@@ -212,13 +258,8 @@ export class LessonDetailComponent implements OnInit {
     const question = this.currentQuestion();
     const answer = this.selectedAnswer().trim();
     
-    if (!question || !answer) {
-      console.log('No question or answer:', { question, answer });
-      return;
-    }
+    if (!question || !answer) return;
 
-    console.log('Checking answer:', { userAnswer: answer, correctAnswer: question.correctAnswer });
-    
     const isCorrect = answer.toLowerCase() === question.correctAnswer.toLowerCase();
     const result: QuestionResult = {
       questionId: question.id,
@@ -229,17 +270,23 @@ export class LessonDetailComponent implements OnInit {
 
     this.results.update(results => [...results, result]);
     
-    // Show feedback
-    alert(isCorrect ? 'Correct!' : `Wrong! The correct answer is: ${question.correctAnswer}`);
+    this.timerService.stopTimer();
+    if (isCorrect) {
+      this.audioService.playCorrect();
+    } else {
+      this.audioService.playIncorrect();
+      this.heartsService.loseHeart();
+    }
     
-    // Move to next question or finish lesson
+    alert(isCorrect ? 'Correct!' : 'Wrong! The correct answer is: ' + question.correctAnswer);
+    
     const lesson = this.currentLesson();
     if (lesson && this.currentQuestionIndex() < lesson.questions.length - 1) {
       setTimeout(() => {
         this.currentQuestionIndex.update(i => i + 1);
         this.selectedAnswer.set('');
+        this.timerService.startTimer(30);
         
-        // Focus input for next question
         const input = this.textInput();
         if (input) {
           input.nativeElement.focus();
@@ -251,15 +298,14 @@ export class LessonDetailComponent implements OnInit {
   }
 
   private finishLesson(): void {
-    // Calculate score and update progress
-    const correctAnswers = this.results().filter(r => r.isCorrect).length;
+    const correctAnswers = this.results().filter((r: QuestionResult) => r.isCorrect).length;
     const totalQuestions = this.results().length;
     const score = Math.round((correctAnswers / totalQuestions) * 100);
     
-    // Update lesson service with progress
     this.lessonService.completeLesson(this.id(), score);
+    this.audioService.playComplete();
     
-    console.log(`Lesson completed with score: ${score}%`);
-    alert(`Lesson completed! Score: ${score}%`);
+    alert('Lesson completed! Score: ' + score + '%');
+    this.router.navigate(['/lessons']);
   }
 }

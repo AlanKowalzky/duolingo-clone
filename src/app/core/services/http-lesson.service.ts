@@ -41,7 +41,21 @@ export class HttpLessonService {
       level: 2,
       xpReward: 15,
       isLocked: true,
-      questions: []
+      questions: [
+        {
+          id: '2-1',
+          type: 'multiple-choice',
+          text: 'What is "one" in Spanish?',
+          options: ['uno', 'dos', 'tres', 'cuatro'],
+          correctAnswer: 'uno'
+        },
+        {
+          id: '2-2',
+          type: 'fill-blank',
+          text: 'Complete: "_____ y dos" (one and two)',
+          correctAnswer: 'uno'
+        }
+      ]
     }
   ];
 
