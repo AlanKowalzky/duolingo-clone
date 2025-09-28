@@ -31,7 +31,7 @@ export class AudioService {
 
   private playTone(frequency: number, duration: number): void {
     try {
-      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const audioContext = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
       const oscillator = audioContext.createOscillator();
       const gainNode = audioContext.createGain();
 
@@ -46,7 +46,7 @@ export class AudioService {
 
       oscillator.start(audioContext.currentTime);
       oscillator.stop(audioContext.currentTime + duration / 1000);
-    } catch (error) {
+    } catch {
       console.log('Audio not supported');
     }
   }

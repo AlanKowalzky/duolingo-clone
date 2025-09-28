@@ -7,7 +7,7 @@ import { mergeMap } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class CustomPreloadingStrategy implements PreloadingStrategy {
-  preload(route: Route, load: () => Observable<any>): Observable<any> {
+  preload(route: Route, load: () => Observable<unknown>): Observable<unknown> {
     // Preload lessons after 2 seconds
     if (route.path === 'lessons') {
       return timer(2000).pipe(mergeMap(() => load()));

@@ -53,7 +53,5 @@ export class CardComponent {
   readonly title = input<string>();
   readonly variant = input<'default' | 'primary' | 'secondary'>('default');
   
-  get hasFooter() {
-    return true; // Simplified - in real app would check for footer content
-  }
+  readonly hasFooter = true; // Simplified - in real app would check for footer content
 }

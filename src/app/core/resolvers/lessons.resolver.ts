@@ -3,7 +3,7 @@ import { ResolveFn } from '@angular/router';
 import { HttpLessonService } from '../services/http-lesson.service';
 import { Lesson } from '../../shared/models/lesson.model';
 
-export const lessonsResolver: ResolveFn<Lesson[]> = (route, state) => {
+export const lessonsResolver: ResolveFn<Lesson[]> = () => {
   const httpLessonService = inject(HttpLessonService);
   return httpLessonService.getLessons();
 };

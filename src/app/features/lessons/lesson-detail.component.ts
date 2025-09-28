@@ -5,7 +5,7 @@ import { LessonService } from '../../core/services/lesson.service';
 import { HeartsService } from '../../core/services/hearts.service';
 import { TimerService } from '../../core/services/timer.service';
 import { AudioService } from '../../core/services/audio.service';
-import { Question, QuestionResult } from '../../shared/models/lesson.model';
+import { QuestionResult } from '../../shared/models/lesson.model';
 import { TimeFormatPipe } from '../../shared/pipes/time-format.pipe';
 
 @Component({

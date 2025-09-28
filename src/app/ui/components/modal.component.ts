@@ -7,11 +7,11 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule],
   template: `
     @if (isOpen()) {
-      <div class="modal-overlay" (click)="onClose()">
-        <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-overlay" (click)="onClose()" (keydown.escape)="onClose()" tabindex="0">
+        <div class="modal-content" (click)="$event.stopPropagation()" (keydown.escape)="onClose()" tabindex="0">
           <div class="modal-header">
             <ng-content select="[slot=header]"></ng-content>
-            <button class="close-btn" (click)="onClose()">×</button>
+            <button class="close-btn" (click)="onClose()" (keydown.enter)="onClose()" tabindex="0" aria-label="Close modal">×</button>
           </div>
           <div class="modal-body">
             <ng-content></ng-content>
@@ -69,9 +69,9 @@ import { CommonModule } from '@angular/common';
 })
 export class ModalComponent {
   readonly isOpen = input.required<boolean>();
-  readonly close = output<void>();
+  readonly closeModal = output<void>();
   
   onClose() {
-    this.close.emit();
+    this.closeModal.emit();
   }
 }

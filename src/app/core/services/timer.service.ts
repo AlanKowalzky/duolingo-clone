@@ -1,4 +1,4 @@
-import { Injectable, signal, computed, effect } from '@angular/core';
+import { Injectable, signal, computed } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
@@ -6,13 +6,13 @@ import { Injectable, signal, computed, effect } from '@angular/core';
 export class TimerService {
   private readonly _timeLeft = signal(30);
   private readonly _isRunning = signal(false);
-  private intervalId: any = null;
+  private intervalId: number | null = null;
 
   readonly timeLeft = this._timeLeft.asReadonly();
   readonly isRunning = this._isRunning.asReadonly();
   readonly isTimeUp = computed(() => this._timeLeft() === 0);
 
-  startTimer(seconds: number = 30): void {
+  startTimer(seconds = 30): void {
     this.stopTimer();
     this._timeLeft.set(seconds);
     this._isRunning.set(true);
