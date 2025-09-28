@@ -1,5 +1,7 @@
 # Duolingo Clone - Angular Final Project
 
+(before PR)
+
 A production-quality Angular 19+ application built as a clone of Duolingo language learning platform, showcasing modern Angular patterns and best practices.
 
 ## 🎯 Project Overview
