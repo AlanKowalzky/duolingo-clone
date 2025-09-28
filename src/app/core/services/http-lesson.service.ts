@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
+import { delay } from 'rxjs/operators';
 import { Lesson } from '../../shared/models/lesson.model';
 
 @Injectable({
@@ -31,6 +32,13 @@ export class HttpLessonService {
           type: 'fill-blank',
           text: 'Complete: "_____ días" (Good morning)',
           correctAnswer: 'Buenos'
+        },
+        {
+          id: '1-3',
+          type: 'multiple-choice',
+          text: 'How do you say "Goodbye" in Spanish?',
+          options: ['Hola', 'Adiós', 'Gracias', 'De nada'],
+          correctAnswer: 'Adiós'
         }
       ]
     },
@@ -54,6 +62,36 @@ export class HttpLessonService {
           type: 'fill-blank',
           text: 'Complete: "_____ y dos" (one and two)',
           correctAnswer: 'uno'
+        },
+        {
+          id: '2-3',
+          type: 'multiple-choice',
+          text: 'What is "five" in Spanish?',
+          options: ['cuatro', 'cinco', 'seis', 'siete'],
+          correctAnswer: 'cinco'
+        }
+      ]
+    },
+    {
+      id: '3',
+      title: 'Colors',
+      description: 'Learn basic colors',
+      level: 3,
+      xpReward: 20,
+      isLocked: true,
+      questions: [
+        {
+          id: '3-1',
+          type: 'multiple-choice',
+          text: 'What is "red" in Spanish?',
+          options: ['azul', 'verde', 'rojo', 'amarillo'],
+          correctAnswer: 'rojo'
+        },
+        {
+          id: '3-2',
+          type: 'fill-blank',
+          text: 'Complete: "El cielo es _____" (The sky is blue)',
+          correctAnswer: 'azul'
         }
       ]
     }
@@ -66,5 +104,12 @@ export class HttpLessonService {
   getLesson(id: string): Observable<Lesson | null> {
     const lesson = this.mockLessons.find(l => l.id === id);
     return of(lesson || null);
+  }
+  
+  // Simulate API delay for realistic testing
+  getLessonsWithDelay(): Observable<Lesson[]> {
+    return of(this.mockLessons).pipe(
+      delay(500) // 500ms delay to simulate network
+    );
   }
 }
