@@ -35,7 +35,7 @@ describe('TimeFormatPipe', () => {
   });
 
   it('should handle string inputs', () => {
-    expect(pipe.transform('30' as any)).toBe('0:30');
-    expect(pipe.transform('invalid' as any)).toBe('0:00');
+    expect(pipe.transform('30' as unknown as number)).toBe('0:30');
+    expect(pipe.transform('invalid' as unknown as number)).toBe('0:00');
   });
 });

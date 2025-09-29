@@ -30,7 +30,7 @@ describe('ScorePipe', () => {
   });
 
   it('should handle string inputs', () => {
-    expect(pipe.transform('85' as any)).toBe('85%');
-    expect(pipe.transform('invalid' as any)).toBe('0%');
+    expect(pipe.transform('85' as unknown as number)).toBe('85%');
+    expect(pipe.transform('invalid' as unknown as number)).toBe('0%');
   });
 });

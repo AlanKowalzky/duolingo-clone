@@ -1,15 +1,8 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { FormBuilder, FormArray, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ButtonComponent } from '../../ui/components/button.component';
 import { CardComponent } from '../../ui/components/card.component';
-
-interface QuizQuestion {
-  text: string;
-  type: 'multiple-choice' | 'fill-blank';
-  options?: string[];
-  correctAnswer: string;
-}
 
 @Component({
   selector: 'app-quiz-builder',
@@ -56,8 +49,9 @@ interface QuizQuestion {
                 <app-card [title]="'Question ' + (i + 1)" variant="secondary">
                   <div [formGroupName]="i" class="question-form">
                     <div class="form-group">
-                      <label>Question Text:</label>
+                      <label for="question-text-{{i}}">Question Text:</label>
                       <input 
+                        id="question-text-{{i}}"
                         type="text" 
                         formControlName="text"
                         class="form-control"
@@ -65,8 +59,8 @@ interface QuizQuestion {
                     </div>
                     
                     <div class="form-group">
-                      <label>Question Type:</label>
-                      <select formControlName="type" class="form-control">
+                      <label for="question-type-{{i}}">Question Type:</label>
+                      <select id="question-type-{{i}}" formControlName="type" class="form-control">
                         <option value="multiple-choice">Multiple Choice</option>
                         <option value="fill-blank">Fill in the Blank</option>
                       </select>
@@ -74,7 +68,7 @@ interface QuizQuestion {
                     
                     @if (getQuestionType(i) === 'multiple-choice') {
                       <div class="form-group">
-                        <label>Options:</label>
+                        <label for="options-{{i}}">Options:</label>
                         <div formArrayName="options" class="options-list">
                           @for (option of getOptionsArray(i).controls; track $index; let j = $index) {
                             <div class="option-input">
@@ -103,8 +97,9 @@ interface QuizQuestion {
                     }
                     
                     <div class="form-group">
-                      <label>Correct Answer:</label>
+                      <label for="correct-answer-{{i}}">Correct Answer:</label>
                       <input 
+                        id="correct-answer-{{i}}"
                         type="text" 
                         formControlName="correctAnswer"
                         class="form-control"
@@ -213,7 +208,7 @@ interface QuizQuestion {
     }
   `]
 })
-export class QuizBuilderComponent {
+export class QuizBuilderComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   
   readonly isLoading = signal(false);

@@ -1,4 +1,4 @@
-import { Component, input, signal } from '@angular/core';
+import { Component, input, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 export interface TabItem {
@@ -95,7 +95,7 @@ export interface TabItem {
     }
   `]
 })
-export class TabsComponent {
+export class TabsComponent implements OnInit {
   readonly tabs = input.required<TabItem[]>();
   readonly defaultTab = input<string>('');
   

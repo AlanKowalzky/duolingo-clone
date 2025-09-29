@@ -1,5 +1,4 @@
 import { HttpInterceptorFn, HttpResponse } from '@angular/common/http';
-import { inject } from '@angular/core';
 import { delay, of, throwError } from 'rxjs';
 
 export const mockInterceptor: HttpInterceptorFn = (req, next) => {
