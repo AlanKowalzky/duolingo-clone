@@ -15,7 +15,7 @@ import { CardComponent } from '../../ui/components/card.component';
       <app-card title="Login to Duolingo Clone" variant="primary">
         <div class="demo-info">
           <p><strong>Demo Credentials:</strong></p>
-          <p>Email: demo@duolingo.com</p>
+          <p>Email: demo&#64;duolingo.com</p>
           <p>Password: demo123</p>
         </div>
         <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" action="/login" method="post">
@@ -116,7 +116,7 @@ export class LoginComponent {
   readonly isLoading = signal(false);
   
   readonly loginForm = this.fb.group({
-    email: ['demo@duolingo.com', [Validators.required, Validators.email]],
+    email: ['demo&#64;duolingo.com', [Validators.required, Validators.email]],
     password: ['demo123', [Validators.required, Validators.minLength(6)]]
   });
   

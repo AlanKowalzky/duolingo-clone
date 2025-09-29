@@ -43,3 +43,6 @@ Thumbs.db
 
 # Documentation diagrams (keep in repo for team collaboration)
 # /diagrams
+
+# Local Netlify folder
+.netlify
