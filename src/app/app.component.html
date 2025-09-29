@@ -5,6 +5,11 @@
   <div class="nav-links">
     <a routerLink="/lessons" routerLinkActive="active">Lessons</a>
     <a routerLink="/profile" routerLinkActive="active">Profile</a>
+    @if (isLoggedIn()) {
+      <button class="logout-btn" (click)="logout()" data-cy="logout-button">
+        Logout
+      </button>
+    }
   </div>
 </nav>
 

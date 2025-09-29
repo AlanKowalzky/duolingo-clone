@@ -15,6 +15,7 @@
   .nav-links {
     display: flex;
     gap: 2rem;
+    align-items: center;
 
     a {
       color: white;
@@ -26,6 +27,22 @@
 
       &:hover, &.active {
         background: rgba(255,255,255,0.2);
+      }
+    }
+
+    .logout-btn {
+      background: #ff4444;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+
+      &:hover {
+        background: #cc3333;
+        transform: translateY(-1px);
       }
     }
   }

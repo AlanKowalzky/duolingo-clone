@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { LessonService } from '../../core/services/lesson.service';
 
 @Component({
@@ -25,6 +26,12 @@ import { LessonService } from '../../core/services/lesson.service';
           <h3>Current Streak</h3>
           <span class="stat-value">{{ lessonService.currentStreak() }}</span>
         </div>
+      </div>
+      
+      <div class="profile-actions">
+        <button class="logout-btn" (click)="logout()" data-cy="logout-button">
+          Logout
+        </button>
       </div>
     </div>
   `,
@@ -57,8 +64,37 @@ import { LessonService } from '../../core/services/lesson.service';
       display: block;
       margin-top: 0.5rem;
     }
+
+    .profile-actions {
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    .logout-btn {
+      background: #ff4444;
+      color: white;
+      border: none;
+      padding: 0.75rem 2rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.2s;
+    }
+
+    .logout-btn:hover {
+      background: #cc3333;
+      transform: translateY(-1px);
+    }
   `]
 })
 export class ProfileComponent {
+  private readonly router = inject(Router);
   readonly lessonService = inject(LessonService);
+  
+  logout(): void {
+    localStorage.removeItem('user-token');
+    localStorage.removeItem('user-progress');
+    this.router.navigate(['/login']);
+  }
 }
