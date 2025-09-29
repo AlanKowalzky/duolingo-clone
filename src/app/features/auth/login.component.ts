@@ -13,7 +13,12 @@ import { CardComponent } from '../../ui/components/card.component';
   template: `
     <div class="login-container">
       <app-card title="Login to Duolingo Clone" variant="primary">
-        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <div class="demo-info">
+          <p><strong>Demo Credentials:</strong></p>
+          <p>Email: demo@duolingo.com</p>
+          <p>Password: demo123</p>
+        </div>
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" action="/login" method="post">
           <div class="form-group">
             <label for="email">Email:</label>
             <input 
@@ -21,7 +26,9 @@ import { CardComponent } from '../../ui/components/card.component';
               type="email" 
               formControlName="email"
               class="form-control"
-              [class.error]="emailError()">
+              [class.error]="emailError()"
+              autocomplete="username"
+              name="email">
             @if (emailError()) {
               <span class="error-text">{{ emailError() }}</span>
             }
@@ -34,7 +41,9 @@ import { CardComponent } from '../../ui/components/card.component';
               type="password" 
               formControlName="password"
               class="form-control"
-              [class.error]="passwordError()">
+              [class.error]="passwordError()"
+              autocomplete="current-password"
+              name="password">
             @if (passwordError()) {
               <span class="error-text">{{ passwordError() }}</span>
             }
@@ -86,6 +95,17 @@ import { CardComponent } from '../../ui/components/card.component';
       margin-bottom: 0.5rem;
       font-weight: 600;
     }
+    .demo-info {
+      background: #e8f5e8;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      border-left: 4px solid #58cc02;
+    }
+    .demo-info p {
+      margin: 0.25rem 0;
+      font-size: 0.9rem;
+    }
   `]
 })
 export class LoginComponent {
@@ -96,8 +116,8 @@ export class LoginComponent {
   readonly isLoading = signal(false);
   
   readonly loginForm = this.fb.group({
-    email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(6)]]
+    email: ['demo@duolingo.com', [Validators.required, Validators.email]],
+    password: ['demo123', [Validators.required, Validators.minLength(6)]]
   });
   
   readonly emailError = signal('');
